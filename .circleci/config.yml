@@ -41,7 +41,8 @@ jobs:
               VERSION_TAG="rc-${VERSION}"
             # non standard branch, tag as ci
             else
-              VERSION_TAG="ci-${VERSION}-dev-${BRANCH}"
+            #  VERSION_TAG="ci-${VERSION}-dev-${BRANCH}"
+              VERSION_TAG="ci-${VERSION}"
             fi
             # -------------
             #     is a tagged release   |       is a pull request        |     is on the master branch
