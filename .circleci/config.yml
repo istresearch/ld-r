@@ -1,15 +1,79 @@
-# Use the latest 2.1 version of CircleCI pipeline processing engine, see https://circleci.com/docs/2.0/configuration-reference/
 version: 2.1
 
-# Use a package of configuration called an orb, see https://circleci.com/docs/2.0/orb-intro/
-orbs:
-  # Declare a dependency on the welcome-orb
-  welcome: circleci/welcome-orb@0.3.1
+dependencies:
+  override:
+    - echo "Ignore default dependencies setup"
 
-# Orchestrate or schedule a set of jobs, see https://circleci.com/docs/2.0/workflows/
+test:
+  override:
+    - echo "Ignoring default test setup"
+
+jobs:
+  build:
+    docker:
+      - image: node:10.15
+
+    steps:
+      - checkout
+
+  deploy:
+    docker:
+      - image: circleci/node:10.15
+
+    steps:
+      - checkout
+      - setup_remote_docker
+
+      - run:
+          name: Docker push
+          command: |
+            IMAGE_BASE=istresearch/ld-r
+            BRANCH=${CIRCLE_BRANCH#*/}
+            VERSION=$(node -e "console.log(require('./package.json').version);")
+            # tagged release
+            if [[ ! -z $CIRCLE_TAG ]]; then
+              VERSION_TAG="${VERSION}"
+            # on develop branch, no PR
+            elif [[ $BRANCH == develop ]] && [[ -z $CIRCLE_PULL_REQUEST ]]; then
+              VERSION_TAG="${VERSION}-dev"
+            # on develop branch, is PR (to master)
+            elif [[ $BRANCH == develop ]] && [[ ! -z $CIRCLE_PULL_REQUEST ]]; then
+              VERSION_TAG="rc-${VERSION}"
+            # non standard branch, tag as ci
+            else
+              VERSION_TAG="ci-${VERSION}-dev-${BRANCH}"
+            fi
+            # -------------
+            #     is a tagged release   |       is a pull request        |     is on the develop branch
+            if [[ ! -z $CIRCLE_TAG ]] || [[ ! -z $CIRCLE_PULL_REQUEST ]] || [[ $BRANCH == develop ]]; then
+              echo Building $IMAGE_BASE:$VERSION_TAG
+              docker login -u "${DOCKER_USER}" -p "${DOCKER_PASS}"
+              docker build --build-arg BUILD_NUMBER=$CIRCLE_BUILD_NUM -t $IMAGE_BASE:$VERSION_TAG -f Dockerfile .
+              docker push $IMAGE_BASE:$VERSION_TAG
+              if [[ $BRANCH == "develop" ]]; then
+                docker tag $IMAGE_BASE:$VERSION_TAG $IMAGE_BASE:ci-develop
+                docker push $IMAGE_BASE:ci-develop
+              else
+                echo "Not on develop branch"
+              fi
+            else
+              echo "No docker images pushed"
+            fi
 workflows:
-  # Name the workflow "Welcome"
-  Welcome:
-    # Run the welcome/run job in its own container
+  version: 2.1
+  ci_pipeline:
     jobs:
-      - welcome/run
+      - build:
+          context: p4
+          filters:
+            tags:
+              only: /.*/
+      - deploy:
+          requires:
+            - build
+          context: p4
+          filters:
+            tags:
+              only: /^v.*/
+            branches:
+only: /.*/
