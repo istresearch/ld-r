@@ -44,8 +44,8 @@ jobs:
               VERSION_TAG="ci-${VERSION}-dev-${BRANCH}"
             fi
             # -------------
-            #     is a tagged release   |       is a pull request        |     is on the develop branch
-            if [[ ! -z $CIRCLE_TAG ]] || [[ ! -z $CIRCLE_PULL_REQUEST ]] || [[ $BRANCH == develop ]]; then
+            #     is a tagged release   |       is a pull request        |     is on the master branch
+            if [[ ! -z $CIRCLE_TAG ]] || [[ ! -z $CIRCLE_PULL_REQUEST ]] || [[ $BRANCH == master ]]; then            
               echo Building $IMAGE_BASE:$VERSION_TAG
               docker login -u "${DOCKER_USER}" -p "${DOCKER_PASS}"
               docker build --build-arg BUILD_NUMBER=$CIRCLE_BUILD_NUM -t $IMAGE_BASE:$VERSION_TAG -f Dockerfile .
