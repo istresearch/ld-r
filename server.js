@@ -90,6 +90,7 @@ server.use('/codemirror', express.static(path.join(__dirname, '/node_modules/cod
 server.use('/jqcloud2', express.static(path.join(__dirname, '/node_modules/jqcloud2')));
 
 server.use('/assets', express.static(path.join(__dirname, '/assets')));
+server.use('/doc', express.static(path.join(__dirname, '/spec')));
 server.use('/uploaded', express.static(path.join(__dirname, uploadFolder[0].replace('\.', ''))));
 // Get access to the fetchr plugin instance
 let fetchrPlugin = app.getPlugin('FetchrPlugin');
