@@ -6,9 +6,14 @@ services:
       context: .
       dockerfile: Dockerfile
     environment:
-      - DOWNLOAD_TIMEOUT=10
+      - SE
+      - SE_API_KEY
+      - SE_HOST
+      - SE_PORT=8182
+      - SE_PATH=/sparql
+      - SE_PROTOCOL=https
     volumes:
-      - ./logs:/var/log/ld-r
+      - ./logs:/ld-r/logs
     ports:
       - 8080:4000
 

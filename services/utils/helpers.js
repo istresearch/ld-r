@@ -1,3 +1,4 @@
+import { Vars } from '../../configs/vars';
 import {sparqlEndpoint} from '../../configs/server';
 import {defaultDatasetURI, enableDynamicServerConfiguration, enableAuthentication} from '../../configs/general';
 import validUrl from 'valid-url';
@@ -225,8 +226,9 @@ export default {
 
                 break;
             case 'neptune':
-                outputObject.uri = 'http://' + endpointParameters.httpOptions.host + ':' + endpointParameters.httpOptions.port + endpointParameters.httpOptions.path;
+                outputObject.uri = protocol + '://' + endpointParameters.httpOptions.host + ':' + endpointParameters.httpOptions.port + endpointParameters.httpOptions.path;
                 outputObject.params['Accept'] = outputFormat;
+                outputObject.params['x-api-key'] = Vars.se_api_key.value;
                 if(mode === 'update'){
                     outputObject.params['update'] = query;
                 }else{

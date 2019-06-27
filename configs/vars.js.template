@@ -1,0 +1,22 @@
+export default {
+    Vars: {
+        'se': {
+            value: '${SE}'
+        },
+        'se_api_key': {
+            value: '${SE_API_KEY}'
+        },
+        'se_host': {
+            value: '${SE_HOST}'
+        },
+        'se_port': {
+            value: '${SE_PORT}'
+        },
+        'se_path': {
+            value: '${SE_PATH}'
+        },
+        'se_protocol': {
+            value: '${SE_PROTOCOL}'
+        },
+    }
+};

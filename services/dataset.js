@@ -1,4 +1,5 @@
 'use strict';
+import { Vars } from '../configs/vars';
 import {getHTTPQuery, getHTTPGetURL} from './utils/helpers';
 import {checkViewAccess, checkEditAccess} from './utils/accessManagement';
 import {getDynamicEndpointParameters, getDynamicDatasets} from './utils/dynamicHelpers';
@@ -11,7 +12,7 @@ import Configurator from './utils/Configurator';
 import rp from 'request-promise';
 /*-------------config-------------*/
 const outputFormat = 'application/sparql-results+json';
-const headers = {'Accept': 'application/sparql-results+json'};
+const headers = {'Accept': 'application/sparql-results+json', 'x-api-key': Vars.se_api_key.value};
 let user;
 /*-----------------------------------*/
 let endpointParameters, datasetURI, dg, graphName, query, query2, queryObject, utilObject, configurator, propertyURI;

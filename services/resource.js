@@ -1,4 +1,5 @@
 'use strict';
+import { Vars } from '../configs/vars';
 import {sparqlEndpoint} from '../configs/server';
 import {getHTTPQuery, getHTTPGetURL, prepareDG} from './utils/helpers';
 import {checkViewAccess, checkEditAccess} from './utils/accessManagement';
@@ -25,7 +26,7 @@ if(enableLogs){
 }
 /*-------------config-------------*/
 const outputFormat = 'application/sparql-results+json';
-const headers = {'Accept': 'application/sparql-results+json'};
+const headers = {'Accept': 'application/sparql-results+json', 'x-api-key': Vars.se_api_key.value};
 /*-----------------------------------*/
 let endpointParameters, category, cGraphName, datasetURI, dg, graphName, propertyURI, resourceURI, objectURI, objectValue, query, queryObject, utilObject, configurator, propertyPath, HTTPQueryObject;
 queryObject = new ResourceQuery();
