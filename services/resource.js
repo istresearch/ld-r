@@ -10,7 +10,7 @@ import ResourceUtil from './utils/ResourceUtil';
 import Configurator from './utils/Configurator';
 import rp from 'request-promise';
 import fs from 'fs';
-import Log from 'log';
+import log4js from 'log4js';
 import async from 'async';
 /*-------------log updates-------------*/
 let log;
@@ -22,7 +22,11 @@ if(enableLogs){
         //create a new file when restarting the server
         logPath = './logs/' + currentDate + '_' + Date.now() + '.log';
     }
-    log = new Log('debug', fs.createWriteStream(logPath));
+    log4js.configure({
+        appenders: { ldr: { type: 'file', filename: logPath } },
+        categories: { default: { appenders: ['ldr'], level: 'info' } }
+    });
+    log = log4js.getLogger('ldr');
 }
 /*-------------config-------------*/
 const outputFormat = 'application/sparql-results+json';
@@ -152,7 +156,7 @@ export default {
                 }).catch(function (err) {
                     console.log(err);
                     if(enableLogs){
-                        log.error('\n User: ' + user.accountName + '\n Status Code: \n' + err.statusCode + '\n Error Msg: \n' + err.message);
+                        log.info('\n User: ' + user.accountName + '\n Status Code: \n' + err.statusCode + '\n Error Msg: \n' + err.message);
                     }
                     callback(null, {objectURI: objectURI, objectType: '', properties: []});
                 });
@@ -207,7 +211,7 @@ export default {
                 }).catch(function (err) {
                     console.log(err);
                     if(enableLogs){
-                        log.error('\n User: ' + user.accountName + '\n Status Code: \n' + err.statusCode + '\n Error Msg: \n' + err.message);
+                        log.info('\n User: ' + user.accountName + '\n Status Code: \n' + err.statusCode + '\n Error Msg: \n' + err.message);
                     }
                     callback(null, {category: params.category});
                 });
@@ -247,7 +251,7 @@ export default {
                 }).catch(function (err) {
                     console.log(err);
                     if(enableLogs){
-                        log.error('\n User: ' + user.accountName + '\n Status Code: \n' + err.statusCode + '\n Error Msg: \n' + err.message);
+                        log.info('\n User: ' + user.accountName + '\n Status Code: \n' + err.statusCode + '\n Error Msg: \n' + err.message);
                     }
                     callback(null, {category: params.category});
                 });
@@ -284,7 +288,7 @@ export default {
                 }).catch(function (err) {
                     console.log(err);
                     if(enableLogs){
-                        log.error('\n User: ' + user.accountName + '\n Status Code: \n' + err.statusCode + '\n Error Msg: \n' + err.message);
+                        log.info('\n User: ' + user.accountName + '\n Status Code: \n' + err.statusCode + '\n Error Msg: \n' + err.message);
                     }
                     callback(null, {datasetURI: datasetURI, resourceURI: newResourceURI});
                 });
@@ -328,7 +332,7 @@ export default {
                 }).catch(function (err) {
                     console.log(err);
                     if(enableLogs){
-                        log.error('\n User: ' + user.accountName + '\n Status Code: \n' + err.statusCode + '\n Error Msg: \n' + err.message);
+                        log.info('\n User: ' + user.accountName + '\n Status Code: \n' + err.statusCode + '\n Error Msg: \n' + err.message);
                     }
                     callback(null, {category: params.category, datasetURI: datasetURI, resourceURI: params.resourceURI, propertyURI: params.propertyURI, objectValue: params.objectValue});
                 });
@@ -364,7 +368,7 @@ export default {
                 }).catch(function (err) {
                     console.log(err);
                     if(enableLogs){
-                        log.error('\n User: ' + user.accountName + '\n Status Code: \n' + err.statusCode + '\n Error Msg: \n' + err.message);
+                        log.info('\n User: ' + user.accountName + '\n Status Code: \n' + err.statusCode + '\n Error Msg: \n' + err.message);
                     }
                     callback(null, {datasetURI: datasetURI, resourceURI: newResourceURI});
                 });
@@ -392,7 +396,7 @@ export default {
             }
             getDynamicEndpointParameters(user, targetDataset, (endpointParameters)=>{
                 graphName = endpointParameters.graphName;
-                query = queryObject.getPrefixes() + queryObject.annotateResource(endpointParameters, user, targetDataset, graphName, params.resource, propertyURI, params.annotations, params.inNewDataset);
+                query = queryObject.getPrefixes() + queryObject.annotateResource(endpointParameters, user, targetDataset, graphName, params.resource, propertyURI, params.annotations, params.inNewDataset, {api: params.api});
                 //console.log(query);
                 //build http uri
                 //send request
@@ -405,7 +409,7 @@ export default {
                 }).catch(function (err) {
                     console.log(err);
                     if(enableLogs){
-                        log.error('\n User: ' + user.accountName + '\n Status Code: \n' + err.statusCode + '\n Error Msg: \n' + err.message);
+                        log.info('\n User: ' + user.accountName + '\n Status Code: \n' + err.statusCode + '\n Error Msg: \n' + err.message);
                     }
                     callback(null, {datasetURI: targetDataset, resourceURI: params.resource, annotations: params.annotations});
                 });
@@ -475,7 +479,7 @@ export default {
                 }).catch(function (err) {
                     console.log(err);
                     if(enableLogs){
-                        log.error('\n User: ' + user.accountName + '\n Status Code: \n' + err.statusCode + '\n Error Msg: \n' + err.message);
+                        log.info('\n User: ' + user.accountName + '\n Status Code: \n' + err.statusCode + '\n Error Msg: \n' + err.message);
                     }
                     callback(null, {category: params.category});
                 });
@@ -524,7 +528,7 @@ export default {
                 }).catch(function (err) {
                     console.log(err);
                     if(enableLogs){
-                        log.error('\n User: ' + user.accountName + '\n Status Code: \n' + err.statusCode + '\n Error Msg: \n' + err.message);
+                        log.info('\n User: ' + user.accountName + '\n Status Code: \n' + err.statusCode + '\n Error Msg: \n' + err.message);
                     }
                     callback(null, {category: params.category});
                 });
@@ -566,7 +570,7 @@ export default {
                 }).catch(function (err) {
                     console.log(err);
                     if(enableLogs){
-                        log.error('\n User: ' + user.accountName + '\n Status Code: \n' + err.statusCode + '\n Error Msg: \n' + err.message);
+                        log.info('\n User: ' + user.accountName + '\n Status Code: \n' + err.statusCode + '\n Error Msg: \n' + err.message);
                     }
                     callback(null, {category: params.category});
                 });
@@ -611,7 +615,7 @@ export default {
                 }).catch(function (err) {
                     console.log(err);
                     if(enableLogs){
-                        log.error('\n User: ' + user.accountName + '\n Status Code: \n' + err.statusCode + '\n Error Msg: \n' + err.message);
+                        log.info('\n User: ' + user.accountName + '\n Status Code: \n' + err.statusCode + '\n Error Msg: \n' + err.message);
                     }
                     callback(null, {category: params.category});
                 });
@@ -651,7 +655,7 @@ export default {
                 }).catch(function (err) {
                     console.log(err);
                     if(enableLogs){
-                        log.error('\n User: ' + user.accountName + '\n Status Code: \n' + err.statusCode + '\n Error Msg: \n' + err.message);
+                        log.info('\n User: ' + user.accountName + '\n Status Code: \n' + err.statusCode + '\n Error Msg: \n' + err.message);
                     }
                     callback(null, {category: params.category});
                 });
@@ -682,7 +686,7 @@ export default {
                 }).catch(function (err) {
                     console.log(err);
                     if(enableLogs){
-                        log.error('\n User: ' + user.accountName + '\n Status Code: \n' + err.statusCode + '\n Error Msg: \n' + err.message);
+                        log.info('\n User: ' + user.accountName + '\n Status Code: \n' + err.statusCode + '\n Error Msg: \n' + err.message);
                     }
                     callback(null, {datasetURI: datasetURI, resourceURI: params.resourceURI});
                 });
@@ -723,7 +727,7 @@ export default {
                 }).catch(function (err) {
                     console.log(err);
                     if(enableLogs){
-                        log.error('\n User: ' + user.accountName + '\n Status Code: \n' + err.statusCode + '\n Error Msg: \n' + err.message);
+                        log.info('\n User: ' + user.accountName + '\n Status Code: \n' + err.statusCode + '\n Error Msg: \n' + err.message);
                     }
                     callback(null, {category: params.category});
                 });
