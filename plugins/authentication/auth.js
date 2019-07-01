@@ -1,10 +1,13 @@
 'use strict';
+import {Vars} from '../../configs/vars';
+
 let rp = require('request-promise');
 let config = require('../../configs/server');
 let generalConfig = require('../../configs/general');
 let helpers = require('../../services/utils/helpers');
 const outputFormat = 'application/sparql-results+json';
-const headers = {'Accept': outputFormat};
+const headers = {'Accept': outputFormat, 'x-api-key': Vars.se_api_key.value};
+
 //this is visible to the server-side
 module.exports = {
     getPropertyLabel: function(uri) {

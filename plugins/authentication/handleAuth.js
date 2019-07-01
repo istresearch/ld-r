@@ -1,5 +1,7 @@
 'use strict';
 //required for authentication
+import {Vars} from '../../configs/vars';
+
 let passwordHash = require('password-hash');
 let passport = require ('passport');
 let passportConfig = require('./passport-config');
@@ -15,7 +17,7 @@ let appShortTitle = generalConfig.appShortTitle;
 let appFullTitle = generalConfig.appFullTitle;
 
 const outputFormat = 'application/sparql-results+json';
-const headers = {'Accept': outputFormat};
+const headers = {'Accept': outputFormat, 'x-api-key': Vars.se_api_key.value};
 
 module.exports = function handleAuthentication(server) {
     server.use(passport.initialize());
@@ -191,7 +193,7 @@ let addUserQueries = (req, res, recaptchaSiteKey) => {
                     }
                 `;
                 let HTTPQueryObject = helpers.getHTTPQuery('update', query, endpoint, outputFormat);
-                rp.post({uri: HTTPQueryObject.uri, form: HTTPQueryObject.params}).then(function(){
+                rp.post({uri: HTTPQueryObject.uri, form: HTTPQueryObject.params, headers: headers}).then(function(){
                     console.log('User is created!');
                     //send email notifications
                     if(generalConfig.enableEmailNotifications){

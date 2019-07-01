@@ -2,6 +2,7 @@ import {enableCSVImport, mappingsDatasetURI, baseResourceDomain, configDatasetUR
 import {getStaticEndpointParameters, getHTTPQuery, getHTTPGetURL} from '../../services/utils/helpers';
 import rp from 'request-promise';
 import camelCase from 'camelcase';
+import {Vars} from '../../configs/vars';
 const ldr_prefix = 'https://github.com/ali1k/ld-reactor/blob/master/vocabulary/index.ttl#';
 const sparql_endpoint_error = '**Please also check if the mapping SPARQL endpoint is running and is updateable**';
 
@@ -9,7 +10,7 @@ class CSVMapper {
     getJSONLDConfig(resourceURI, options, callback) {
         const endpointParameters = getStaticEndpointParameters(mappingsDatasetURI[0]);
         const graphName = endpointParameters.graphName;
-        const headers = {'Accept': 'application/sparql-results+json'};
+        const headers = {'Accept': 'application/sparql-results+json', 'x-api-key': Vars.se_api_key.value};
         const outputFormat = 'application/sparql-results+json';
         let graph = ' GRAPH <'+ graphName +'> {';
         let graphEnd = ' }';

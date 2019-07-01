@@ -1,6 +1,7 @@
 import {enableDynamicReactorConfiguration, enableDynamicServerConfiguration, enableDynamicFacetsConfiguration, configDatasetURI, enableAutomaticConfiguration, authDatasetURI, enableQuerySaveImport, mappingsDatasetURI} from '../../configs/general';
 import {getStaticEndpointParameters, getHTTPQuery, getHTTPGetURL} from '../../services/utils/helpers';
 import rp from 'request-promise';
+import {Vars} from '../../configs/vars';
 const ldr_prefix = 'https://github.com/ali1k/ld-reactor/blob/master/vocabulary/index.ttl#';
 const sparql_endpoint_error = '**Please also check if the configuration SPARQL endpoint is running and is updateable**';
 
@@ -18,7 +19,7 @@ class DynamicConfigurator {
             }
             const endpointParameters = getStaticEndpointParameters(configDatasetURI[0]);
             const graphName = endpointParameters.graphName;
-            const headers = {'Accept': 'application/sparql-results+json'};
+            const headers = {'Accept': 'application/sparql-results+json', 'x-api-key': Vars.se_api_key.value};
             const outputFormat = 'application/sparql-results+json';
             //query the triple store for server configs
             const prefixes = `
